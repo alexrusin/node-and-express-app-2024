@@ -7,11 +7,7 @@ export const listTasks = async (req: Request, res: Response) => {
   res.status(200).json({ tasks });
 };
 
-export const getTask = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getTask = async (req: Request, res: Response) => {
   const task = await prisma.task.findUnique({
     where: {
       id: req.params.id,
