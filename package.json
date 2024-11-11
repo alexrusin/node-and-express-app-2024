@@ -47,6 +47,7 @@
     "@prisma/client": "^5.21.1",
     "cors": "^2.8.5",
     "express": "^5.0.1",
+    "express-oauth2-jwt-bearer": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7"
