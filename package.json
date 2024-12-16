@@ -50,7 +50,9 @@
     "express-oauth2-jwt-bearer": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
