@@ -35,3 +35,28 @@ export const getTask = async (req: Request, res: Response) => {
 
   res.status(200).json({ task });
 };
+
+export const createTask = async (req: Request, res: Response) => {
+  const task = await prisma.task.create({
+    data: {
+      user_id: req.auth?.payload.sub as string,
+      ...req.body,
+    },
+  });
+
+  res.status(201).json({ task });
+};
+
+export const updateTask = async (req: Request, res: Response) => {
+  const task = await prisma.task.update({
+    where: {
+      id: req.params.id,
+      user_id: req.auth?.payload.sub as string,
+    },
+    data: {
+      ...req.body,
+    },
+  });
+
+  res.status(200).json({ task });
+};
