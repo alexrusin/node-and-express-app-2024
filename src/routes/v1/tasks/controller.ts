@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import EntityNotFoundError from "../../../errors/EntityNotFoundError";
-import prisma from "../../../prisma-client";
-import logger from "../../../logger";
+import { Request, Response } from "express";
+import EntityNotFoundError from "@errors/EntityNotFoundError";
+import prisma from "@/prisma-client";
+import logger from "@/logger";
 
 export const listTasks = async (req: Request, res: Response) => {
   logger.debug("Requesting tasks");

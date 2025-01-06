@@ -1,3 +1,4 @@
+import "module-alias/register";
 import { createServer } from "./server";
 import config from "./config";
 
