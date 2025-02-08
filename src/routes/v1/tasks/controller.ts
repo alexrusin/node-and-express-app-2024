@@ -1,9 +1,27 @@
 import { Request, Response } from "express";
 import { repository } from "@/data/repositories";
+import { encodeBase64, getPaginationParameters } from "@/utils";
 
 export const listTasks = async (req: Request, res: Response) => {
-  const tasks = await repository.listTasks({}, req.auth?.payload.sub);
-  res.status(200).json({ tasks });
+  const { limit, nextCursor, prevCursor } = getPaginationParameters(req);
+
+  const result = await repository.listTasks(
+    {
+      limit,
+      nextCursor,
+      prevCursor,
+    },
+    req.auth?.payload.sub,
+  );
+  res.status(200).json({
+    tasks: result.tasks,
+    nextCursor: result.nextCursor
+      ? encodeBase64(result.nextCursor.toISOString())
+      : null,
+    prevCursor: result.prevCursor
+      ? encodeBase64(result.prevCursor.toISOString())
+      : null,
+  });
 };
 
 export const getTask = async (req: Request, res: Response) => {

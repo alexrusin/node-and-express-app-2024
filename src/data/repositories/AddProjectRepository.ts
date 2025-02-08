@@ -5,6 +5,7 @@ import {
   IProject,
   IProjectQueryParameters,
   IProjectRepository,
+  IProjectQueryResult,
 } from "./repository";
 
 type PrismaProject = Prisma.ProjectGetPayload<{}>;
@@ -28,15 +29,33 @@ export function AddProjectRepository<TBase extends Constructor<BaseRepository>>(
     async listProjects(
       query: IProjectQueryParameters,
       userId?: string,
-    ): Promise<IProject[]> {
+    ): Promise<IProjectQueryResult> {
+      const { limit, sortOrder, operator, cursor } =
+        this.getPaginationQueryParameters(query);
+
+      const where = {
+        user_id: userId,
+        created_at: { [operator]: cursor },
+      };
+
       const projects = await this.client.project.findMany({
-        where: {
-          user_id: userId,
+        where,
+        take: limit + 1,
+        orderBy: {
+          created_at: sortOrder,
         },
-        take: query.limit || this.defaultLimit,
-        skip: query.offset || this.defaultOffset,
       });
-      return projects.map((item) => this.mapProject(item));
+
+      const { nextCursorTimestamp, prevCursorTimestamp } =
+        this.getPaginationCursors(query, projects, limit, sortOrder);
+
+      if (sortOrder === "desc") projects.reverse();
+
+      return {
+        projects: projects.map((item) => this.mapProject(item)),
+        nextCursor: nextCursorTimestamp,
+        prevCursor: prevCursorTimestamp,
+      };
     }
 
     async getProject(id: string, userId?: string): Promise<IProject> {

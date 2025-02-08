@@ -1,7 +1,12 @@
 import EntityNotFoundError from "@/errors/EntityNotFoundError";
 import BaseRepository, { Constructor } from "./BaseRepository";
 import { Prisma } from "@prisma/client";
-import { ITask, ITaskQueryParameters, ITaskRepository } from "./repository";
+import {
+  ITask,
+  ITaskQueryParameters,
+  ITaskRepository,
+  ITaskQueryResult,
+} from "./repository";
 
 type PrismaTask = Prisma.TaskGetPayload<{}>;
 
@@ -25,16 +30,34 @@ export function AddTaskRepository<TBase extends Constructor<BaseRepository>>(
     async listTasks(
       query: ITaskQueryParameters,
       userId?: string,
-    ): Promise<ITask[]> {
+    ): Promise<ITaskQueryResult> {
+      const { limit, sortOrder, operator, cursor } =
+        this.getPaginationQueryParameters(query);
+
+      const where = {
+        user_id: userId,
+        project_id: query.projectId,
+        created_at: { [operator]: cursor },
+      };
+
       const tasks = await this.client.task.findMany({
-        where: {
-          user_id: userId,
-          project_id: query.projectId,
+        where,
+        take: limit + 1,
+        orderBy: {
+          created_at: sortOrder,
         },
-        take: query.limit || this.defaultLimit,
-        skip: query.offset || this.defaultOffset,
       });
-      return tasks.map((item) => this.mapTask(item));
+
+      const { nextCursorTimestamp, prevCursorTimestamp } =
+        this.getPaginationCursors(query, tasks, limit, sortOrder);
+
+      if (sortOrder === "desc") tasks.reverse();
+
+      return {
+        tasks: tasks.map((item) => this.mapTask(item)),
+        nextCursor: nextCursorTimestamp,
+        prevCursor: prevCursorTimestamp,
+      };
     }
 
     async getTask(id: string, userId?: string): Promise<ITask> {
