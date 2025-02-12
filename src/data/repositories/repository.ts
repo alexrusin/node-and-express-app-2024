@@ -24,6 +24,9 @@ interface IQueryParameters {
 
 export interface ITaskQueryParameters extends IQueryParameters {
   projectId?: string;
+  search?: string;
+  completed?: boolean;
+  orderBy?: { [key in "created_at" | "due_date"]?: "asc" | "desc" };
 }
 
 export interface IProjectQueryParameters extends IQueryParameters {}

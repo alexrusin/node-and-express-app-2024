@@ -31,15 +31,28 @@ export function AddTaskRepository<TBase extends Constructor<BaseRepository>>(
       query: ITaskQueryParameters,
       userId?: string,
     ): Promise<ITaskQueryResult> {
-      const where = {
+      const where: Prisma.TaskWhereInput = {
         user_id: userId,
         project_id: query.projectId,
+        name: {
+          contains: query.search,
+        },
       };
+
+      if (query.completed !== undefined) {
+        if (query.completed) {
+          where.completed_on = { not: null };
+        } else {
+          where.completed_on = null;
+        }
+      }
+
       const [tasks, count] = await this.client.$transaction([
         this.client.task.findMany({
           where,
           take: query.limit || this.defaultLimit,
           skip: query.offset || this.defaultOffset,
+          orderBy: query.orderBy as Prisma.TaskOrderByWithRelationInput,
         }),
         this.client.task.count({ where }),
       ]);

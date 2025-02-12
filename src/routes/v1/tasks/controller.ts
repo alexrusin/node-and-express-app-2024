@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { repository } from "@/data/repositories";
-import { getPaginationParameters } from "@/utils";
+import { getPaginationParameters, parseTaskQueryParameters } from "@/utils";
 
 export const listTasks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getPaginationParameters(req);
+  const queryParameters = parseTaskQueryParameters(req);
   const result = await repository.listTasks(
-    { limit, offset },
+    { limit, offset, ...queryParameters },
     req.auth?.payload.sub,
   );
   res.status(200).json({
