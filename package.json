@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "dotenv -- tsc-watch --onsuccess \"node dist/index.js\"",
-    "build": "tsc",
-    "start": "dotenv -- node dist/index.js",
+    "dev": "dotenv -- tsc-watch --sourceMap --onsuccess \"node --enable-source-maps dist/index.js\"",
+    "build": "tsc --sourceMap",
+    "start": "dotenv -- node dist/index.js --enable-source-maps",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint",
