@@ -29,6 +29,7 @@
     "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.7.5",
+    "@types/nodemailer": "^6.4.17",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
@@ -56,6 +57,7 @@
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.7",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
