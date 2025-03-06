@@ -1,4 +1,5 @@
 import "module-alias/register";
+import "reflect-metadata";
 import { createServer } from "./server";
 import config from "./config";
 

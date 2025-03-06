@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
+import { plainToInstance } from "class-transformer";
 import { repository } from "@/data/repositories";
 import { getPaginationParameters, parseTaskQueryParameters } from "@/utils";
 import { mailer } from "@/services/mailer";
 import { CreateTaskUseCase } from "@/use-cases/CreateTaskUseCase";
+import { Task } from "@/data/entities/Task";
 
 export const listTasks = async (req: Request, res: Response) => {
   const { page, perPage, limit, offset } = getPaginationParameters(req);
@@ -11,8 +13,9 @@ export const listTasks = async (req: Request, res: Response) => {
     { limit, offset, ...queryParameters },
     req.auth?.payload.sub,
   );
+  const tasks = result.tasks.map((item) => plainToInstance(Task, item));
   res.status(200).json({
-    tasks: result.tasks,
+    tasks: tasks.map((item) => item.asDto()),
     page,
     per_page: perPage,
     total_pages: Math.ceil(result.totalCount / perPage),
@@ -21,8 +24,23 @@ export const listTasks = async (req: Request, res: Response) => {
 };
 
 export const getTask = async (req: Request, res: Response) => {
-  const task = await repository.getTask(req.params.id, req.auth?.payload.sub);
-  res.status(200).json({ task });
+  const taskData = await repository.getTask(
+    req.params.id,
+    req.auth?.payload.sub,
+  );
+  const task = plainToInstance(Task, taskData);
+  res.status(200).json({ task: task.asDto() });
+};
+
+export const markTaskAsCompleted = async (req: Request, res: Response) => {
+  const taskData = await repository.getTask(
+    req.params.id,
+    req.auth?.payload.sub,
+  );
+  const task = plainToInstance(Task, taskData);
+  task.markAsCompleted();
+  await repository.updateTask(req.params.id, task, req.auth?.payload.sub);
+  res.status(200).json({ task: task.asDto() });
 };
 
 export const createTask = async (req: Request, res: Response) => {
