@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/config.ts</title>
+    <title>Code coverage report for src/server.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> config.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> server.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/2</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">96.15% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>25/26</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Functions</span>
+                <span class="quiet">Branches</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Lines</span>
+                <span class="quiet">Functions</span>
                 <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -84,48 +84,63 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">8x</span>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const config = {
-  env: process.env.NODE_ENV || <span class="branch-1 cbranch-no" title="branch not covered" >"development",</span>
-  port: parseInt(process.env.PORT || "3000"),
-  debug: process.env.APP_DEBUG === "true",
-  logLevel: process.env.LOG_LEVEL || "info",
-  consoleLogEmails: process.env.CONSOLE_LOG_EMAILS === "true",
-  defaultPageSize: parseInt(process.env.DEFAULT_PAGE_SIZE || "5"),
-  appSecret: process.env.APP_SECRET || "",
-  issuerBaseUrl: process.env.ISSUER_BASE_URL || "https://ussuer.com",
-  audience: process.env.AUDIENCE || "default-audience",
-  mail: {
-    mailer: process.env.MAIL_MAILER || "smtp",
-    host: process.env.MAIL_HOST || "",
-    port: Number(process.env.MAIL_PORT) || 0,
-    username: process.env.MAIL_USERNAME || "",
-    password: process.env.MAIL_PASSWORD || "",
-  },
-  adminEmail: process.env.ADMIN_EMAIL || "",
-};
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import express, { Request, Response } from "express";
+import cors from "cors";
+import config from "./config";
+import v1 from "./routes/v1";
+import errorHandler from "./middleware/error-handler";
+import morganMiddleware from "./middleware/morgan-middleware";
 &nbsp;
-export default config;
+export const createServer = () =&gt; {
+  const app = express();
+  app
+    .disable("x-powered-by")
+    .use(morganMiddleware)
+    .use(express.urlencoded({ extended: true }))
+    .use(express.json())
+    .use(cors());
+&nbsp;
+  app.get("/health", (req: Request, res: Response) =&gt; {
+    res.json({ ok: true, environment: config.env });
+  });
+&nbsp;
+  app.use("/v1", v1);
+&nbsp;
+  app.use(errorHandler);
+&nbsp;
+  return app;
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
