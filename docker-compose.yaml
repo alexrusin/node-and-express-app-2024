@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: mysql://root:secret@db:3306/task_manager
+      NODE_ENV: production
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: task_manager
+    ports:
+      - "33061:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
